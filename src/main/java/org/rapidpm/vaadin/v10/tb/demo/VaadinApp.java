@@ -15,7 +15,8 @@
  */
 package org.rapidpm.vaadin.v10.tb.demo;
 
-
+import org.joscha.facebook.FacebookSignin;
+import org.joscha.google.GoogleSignin;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
@@ -31,25 +32,18 @@ import static org.rapidpm.vaadin.addons.framework.ComponentIDGenerator.spanID;
 @Route("")
 public class VaadinApp extends Composite<Div> implements HasLogger {
 
-  // read http://vaadin.com/testing for more infos
-  public static final String BTN_CLICK_ME   = buttonID().apply(VaadinApp.class, "btn-click-me");
-  public static final String LB_CLICK_COUNT = spanID().apply(VaadinApp.class, "lb-click-count");
-
-  private final Button         btnClickMe   = new Button("click me");
-  private final Span           lbClickCount = new Span("0");
-  private final VerticalLayout layout       = new VerticalLayout(btnClickMe, lbClickCount);
-
-  private int clickcount = 0;
+  private final GoogleSignin googleSignin = new GoogleSignin("your-api-key", "your-api-secret");
+  private final FacebookSignin facebookSignin = new FacebookSignin("your-client-id", "your-client-secret");
+  private final VerticalLayout layout       = new VerticalLayout(googleSignin, facebookSignin);
 
   public VaadinApp() {
-    btnClickMe.setId(BTN_CLICK_ME);
-    btnClickMe.addClickListener(event -> lbClickCount.setText(valueOf(++clickcount)));
-
-    lbClickCount.setId(LB_CLICK_COUNT);
-
     //set the main Component
     logger().info("setting now the main ui content..");
     getContent().add(layout);
+
+    googleSignin.addLoginListener(googleUser -> {/*do something*/});
+
+    facebookSignin.addLoginListener(facebookUser -> {/*do something*/});
 
   }
 }
